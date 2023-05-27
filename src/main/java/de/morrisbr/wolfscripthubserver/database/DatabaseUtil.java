@@ -1,5 +1,6 @@
 package de.morrisbr.wolfscripthubserver.database;
 
+import com.mongodb.client.model.CountOptions;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import de.morrisbr.wolfscripthubserver.Main;
@@ -21,11 +22,8 @@ public class DatabaseUtil {
 		return document;
 	}
 
-	public boolean documentExists(String filterByKey, String name, String collectionName) {
-		Bson filter = Filters.eq(filterByKey, name);
-		Document document = main.getMongoDatabase().getCollection(collectionName).find(filter)
-				.first();
-		return document != null;
+	public boolean documentExists(Bson filter, String collectionName) {
+		return this.main.getMongoDatabase().getCollection(collectionName).countDocuments(filter, new CountOptions().limit(1)) > 0L;
 	}
 
 	public DatabaseUtil addObjectToDocument(String documentKey, String documentValue, String key, String value, String collectionName) {

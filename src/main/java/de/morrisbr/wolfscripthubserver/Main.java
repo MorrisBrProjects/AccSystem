@@ -46,14 +46,14 @@ public class Main {
         app._conf.addStaticFiles("resources", Location.EXTERNAL);
         app._conf.sessionHandler(() -> fileSessionHandler());
         app._conf.accessManager((handler, ctx, routeRoles) -> {
-            SessionData sessionData =  sessionService.getSessionData(ctx);
-            if(sessionData == null) {
+            SessionData sessionData = sessionService.getSessionData(ctx);
+            if (sessionData == null) {
                 sessionData = new SessionData();
                 sessionData.setSessionToken(ctx.req.getSession().getId());
                 sessionData.setRole(RouteRole.NOT_LOGIN);
                 sessionService.getSessionDataHashMap().put(sessionData.getSessionToken(), sessionData);
             }
-            if(sessionService.isSessionDataExist(ctx)) {
+            if (sessionService.isSessionDataExist(ctx)) {
                 if (routeRoles.isEmpty() || routeRoles.contains(sessionData.getRole())) {
                     handler.handle(ctx);
                 } else {
@@ -75,13 +75,12 @@ public class Main {
         JavalinJte.configure(engine);
 
 
-
         app.get("/login", ctx -> {
             ctx.render("login.jte");
         }, RouteRole.NOT_LOGIN);
 
         app.post("/login", ctx -> {
-            if(accountStorage.isLoginValid(ctx.formParam("username"), ctx.formParam("password"))) {
+            if (accountStorage.isLoginValid(ctx.formParam("username"), ctx.formParam("password"))) {
                 Account account = accountStorage.getAccount(ctx.formParam("username"));
                 ctx.status(200).result("Ok");
                 SessionData sessionData = new SessionData();
@@ -100,10 +99,10 @@ public class Main {
         }, RouteRole.NOT_LOGIN);
 
         app.post("/register", ctx -> {
-            if(accountStorage.isAccountExist(ctx.formParam("username"))) {
+            if (accountStorage.isAccountExist(ctx.formParam("username"))) {
                 ctx.status(401).result("Username already exist!");
             } else {
-                if(ctx.formParam("username").length() >= 5 && ctx.formParam("password").length() >= 5) {
+                if (ctx.formParam("username").length() >= 5 && ctx.formParam("password").length() >= 5) {
                     accountStorage.registerAccount(ctx.formParam("username"), ctx.formParam("password"), ctx);
                     ctx.status(200).result("Ok");
                 } else {
@@ -124,7 +123,6 @@ public class Main {
         }, RouteRole.IS_LOGIN);
 
     }
-
 
 
     static SessionHandler fileSessionHandler() {
