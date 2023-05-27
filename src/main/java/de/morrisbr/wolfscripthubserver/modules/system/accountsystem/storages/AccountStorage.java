@@ -34,8 +34,8 @@ public class AccountStorage {
         acc.setPassword(password);
         acc.setId(main.getMongoDatabase().getCollection("Accounts").countDocuments());
 
-        final String json = GSON.toJson(acc);
-        final Document document = Document.parse(json);
+        String json = GSON.toJson(acc);
+        Document document = Document.parse(json);
         this.main.getMongoDatabase().getCollection("accounts").insertOne(document);
     }
 
