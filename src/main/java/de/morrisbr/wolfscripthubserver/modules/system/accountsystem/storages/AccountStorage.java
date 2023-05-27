@@ -9,6 +9,7 @@ import de.morrisbr.wolfscripthubserver.Main;
 import de.morrisbr.wolfscripthubserver.modules.system.accountsystem.account.Account;
 import de.morrisbr.wolfscripthubserver.database.MongoManager;
 import io.javalin.http.Context;
+import java.util.regex.Pattern;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +55,14 @@ public class AccountStorage {
         return null;
     }*/
 
+    public @Nullable Account getAccount(String username) {
+        FindIterable<Document> cursor = this.main.getMongoDatabase().getCollection("accounts")
+                .find(Filters.eq("username", username))
+                .cursorType(CursorType.NonTailable);
+
+        Document document = cursor.first();
+        return document != null ? GSON.fromJson(document.toJson(), Account.class) : null;
+    }
 
     public @Nullable Account getAccount(Long id) {
         FindIterable<Document> cursor = this.main.getMongoDatabase().getCollection("accounts")
