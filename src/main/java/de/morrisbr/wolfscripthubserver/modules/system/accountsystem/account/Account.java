@@ -31,7 +31,7 @@ public class Account {
 
 
 
-    public boolean hasPerm(Permission perm) {
+    public boolean hasPerm(Permission perm) { //or with contain
         for (Permission permission : this.getPermissions()) {
             if(permission == perm) return true;
         }
